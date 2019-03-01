@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Javascript Practice</title>
+</head>
+<body>
+	<h1 id = "welcome"></h1>
+	<h3 id = "dealer-gets"></h3>
+	<p id = "dealer-revealed-card"></p>
+	<h3 id = "intro"></h3>
+	<p id = "player-card1"></p>
+	<p id = "player-card2"></p>
+	<p id = "dealer-revealed-card"></p>
+	<p id = "ask"></p>
+	<p id = "dealer-move1"></p>
+	<p id = "player-move1"></p>
+	<p id = "dealer-move2"></p>
+	<p id = "player-move2"></p>
+	<p id = "dealer-move3"></p>
+	<p id = "player-move3"></p>
+	<p id = "dealer-move4"></p>
+	<p id = "player-move4"></p>
+	<p id = "dealer-move5"></p>
+	<p id = "player-move5"></p>
+	<p id = "player-final-hand"></p>
+	<p id = "dealer-final-hand"></p>
+	<p id = "final-score"></p>
+	<p id = "end-the-game"></p>
+
+	<button type ="button" id="hit">Hit Me</button>
+	<button type ="button" id="stand">Stand</button>
+
+</body>
+<script>
+	//
+	//BlackJack Game
+	//by Udochi Okeke
+	//
+
+
+	function Dealer(){
+		/*this.cardDeck = [["Ace of Spades", 11], ["Ace of Clubs", 11], ["Ace of Hearts", 11], ["Ace of Diamonds", 11], ["King of Spades", 10], ["King of Clubs", 10], ["King of Hearts", 10], ["King of Diamonds", 10], ["Queen of Spades", 10], ["Queen of Clubs", 10], ["Queen of Hearts", 10], ["Queen of Diamonds", 10], ["Jack of Spades", 10], ["Jack of Clubs", 10], ["Jack of Hearts", 10], ["Jack of Diamonds", 10], ["Ten of Spades", 10], ["Ten of Clubs", 10], ["Ten of Hearts", 10], ["Ten of Diamonds", 10], ["Nine of Spades", 9], ["Nine of Clubs", 9], ["Nine of Hearts", 9], ["Nine of Diamonds", 9], ["Eight of Spades", 8], ["Eight of Clubs", 8], ["Eight of Hearts", 8], ["Eight of Diamonds", 8], ["Seven of Spades", 7], ["Seven of Clubs", 7], ["Seven of Hearts", 7], ["Seven of Diamonds", 7], ["Six of Spades", 6], ["Six of Clubs", 6], ["Six of Hearts", 6], ["Six of Diamonds", 6], ["Five of Spades", 5], ["Five of Clubs", 5], ["Five of Hearts", 5], ["Five of Diamonds", 5], ["Four of Spades", 4], ["Four of Clubs", 4], ["Four of Hearts", 4], ["Four of Diamonds", 4], ["Three of Spades", 3], ["Three of Clubs", 3], ["Three of Hearts", 3], ["Three of Diamonds", 3], ["Two of Spades", 2], ["Two of Clubs", 2], ["Two of Hearts", 2], ["Two of Diamonds", 2]];
+*/
+		let suits = ["Hearts", "Diamonds", "Clubs", "Spades"];
+		let values = ["Ace", "King", "Queen", "Jack", "Ten", "Nine", "Eight", "Seven", "Six", "Five", "Four", "Three", "Two"];
+
+		this.createDeck = function(dealer){
+			let deck = [];
+			for(let suitsIdx = 0; suitsIdx < suits.length; suitsIdx++){
+				for(let valuesIdx = 0; valuesIdx < values.length; valuesIdx++){
+					deck.push(values[valuesIdx] + " of " + suits[suitsIdx]);
+				}
+			}
+			return deck;
+		}
+
+		
+
+		this.getCard = function(cardDeck){
+			let cardPos = Math.random() * cardDeck.length;
+			let yourCard = Math.ceil(cardPos) - 1;
+			let	card = cardDeck.splice(yourCard, 1);
+			return card;
+	}
+
+
+		this.getDeck = function(){
+			return this.cardDeck;
+	}
+
+
+		this.deal = function(card, points, id, hand){
+		this.points = points;
+		document.getElementById(id).innerHTML = card;
+		return hand.push(card);
+	
+	}
+
+}
+
+	function keepscore(card){
+			let value = card.substr(0,card.indexOf(' '));
+			let score = 0;
+			if (value === "Ace") {
+				score = score + 11;
+			} if (value === "King" || value === "Queen" || value === "Jack" || value === "Ten") {
+				score = score + 10;
+			} if (value === "Ten"){
+				score = score + 10;
+			}if (value === "Nine"){
+				score = score + 9;
+			}if (value === "Eight"){
+				score = score + 8;
+			}if (value === "Seven"){
+				score = score + 7;
+			}if (value === "Six"){
+				score = score + 6;
+			}if (value === "Five"){
+				score = score + 5;
+			}if (value === "Four"){
+				score = score + 4;
+			}if (value === "Three"){
+				score = score + 3;
+			}if (value === "Two"){
+				score = score + 2;
+			}
+			return score;
+		}
+
+	function endGame(message, playerHand, dealerHand, playerScore, dealerScore){
+		let winner = "";
+		
+		document.getElementById("player-final-hand").innerHTML = "Your cards were " + playerHand;
+		document.getElementById("dealer-final-hand").innerHTML = "Dealer's cards were " + dealerHand;
+
+		if(dealerScore>playerScore){
+			winner = "Dealer";
+		}else {
+			winner = "Player (you) ";
+		}
+		return document.getElementById("end-the-game").innerHTML = message(winner);
+	}
+
+	let dealer = new Dealer();
+	let deck = dealer.createDeck();
+	let playerScore = 0;
+	let dealerScore = 0;
+	let playerHand = [];
+	let dealerHand = [];
+	let hitOrStay = "<b>Hit or Stay?</b>";
+	let welcome = document.getElementById("welcome");
+	let intro = document.getElementById("intro");
+	let hit = document.getElementById("hit");
+	let stand = document.getElementById("stand");
+	let dealerReveal = document.getElementById("dealer-gets");
+	let gameOverMessage = function(winner){
+		return "Game over! " + winner + " wins!";
+	}
+
+	welcome.innerHTML = "Welcome to Blackjack!";
+	let dealerHiddenCard = dealer.getCard(deck);
+	dealerHand.push(dealerHiddenCard);
+	dealerReveal.innerHTML = "Your dealer gets:";
+	dealer.deal(dealer.getCard(deck), "dealer-revealed-card", dealerHand);
+	intro.innerHTML = "You are dealt:";
+	dealer.deal(dealer.getCard(deck), "player-card1", playerHand);
+	dealer.deal(dealer.getCard(deck), "player-card2", playerHand);
+	document.getElementById("ask").innerHTML = hitOrStay;
+
+	let clicks = 0;
+	let moves = 1;
+	let hitMe = document.getElementById("hit");
+	let dealsPlayer = dealer.deal(dealer.getCard(deck), "player-move" + moves, playerHand);
+	while(clicks < 4){
+		clicks++;
+		document.addEventListener("click", function(){
+			if(hitMe.addEventListener){
+				hitMe.addEventListener("click", dealsPlayer);
+			dealer.deal(dealer.getCard(deck)+ " " +ask, "dealer-move" + moves, dealerHand);
+			moves++;
+			}
+			if(document.getElementById("stand").addEventListener){
+			document.getElementById("stand").addEventListener("click", endGame(gameOverMessage, playerHand, dealerHand));
+			break;
+		}
+		});
+
+}
+		
+	//TODO: find out why I am being told that deck does not have method "splice"
+endGame(gameOverMessage, playerHand, dealerHand);
+
+</script>
+</html>
