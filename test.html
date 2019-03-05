@@ -57,11 +57,7 @@
 	}
 
 
-		this.getDeck = function(){
-			return this.cardDeck;
-	}
-
-		this.deal = function(card, id, player){
+	this.deal = function(card, id, player){
 		player.score = player.score + keepscore(card);
 		document.getElementById(id).innerHTML = card;
 		player.cards.push(card);
