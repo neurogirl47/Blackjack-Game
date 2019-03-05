@@ -104,10 +104,14 @@
 		document.getElementById("player-final-hand").innerHTML = "Your cards were " + player1.cards;
 		document.getElementById("dealer-final-hand").innerHTML = "Dealer's cards were " + player2.cards;
 
-		if(player2.score>player1.score){
-			winner = "Dealer";
-		}else {
-			winner = "Player (you) ";
+		if(player1.score > 21){
+				winner = "You crapped out! Dealer ";
+			}
+		else if(player2.score>player1.score){
+			winner = "The dealer had more points than you. Dealer ";
+		}
+		else if(player1.score>player2.score){
+			winner = "Congratulations! Player (you) ";
 		}
 
 		if(player2.score === player1.score){
